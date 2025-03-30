@@ -154,3 +154,38 @@ export const updateProfile = async (req, res) => {
     console.log(error);
   }
 };
+
+export const getProfile = async (req, res) => {
+  try {
+    // Change this line to use req.id instead of req.user?.id
+    const userId = req.id; 
+
+    if (!userId) {
+      return res.status(401).json({
+        message: "Unauthorized. User ID not found.",
+        success: false,
+      });
+    }
+
+    const user = await User.findById(userId).select("-password");
+
+    if (!user) {
+      return res.status(404).json({
+        message: "User not found",
+        success: false,
+      });
+    }
+
+    return res.status(200).json({
+      message: "User profile fetched successfully",
+      user,
+      success: true,
+    });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({
+      message: "Server error",
+      success: false,
+    });
+  }
+};

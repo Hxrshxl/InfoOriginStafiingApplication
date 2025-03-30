@@ -109,51 +109,6 @@ export const logout = async (req, res) => {
   }
 };
 
-export const updateProfile = async (req, res) => {
-  try {
-    const { fullName, email, phoneNumber, bio, skills } = req.body;
-
-    let skillsArray;
-    if (skills) {
-      skillsArray = skills.split(",");
-    }
-    const userId = req.id;
-    let user = await User.findById(userId);
-
-    if (!user) {
-      return res.status(400).json({
-        message: "user not found",
-        success: false,
-      });
-    }
-
-    if (fullName) user.fullName = fullName;
-    if (email) user.email = email;
-    if (phoneNumber) user.phoneNumber = phoneNumber;
-    if (bio) user.profile.bio = bio;
-    if (skills) user.profile.skills = skillsArray;
-
-    //resume comes later here...
-
-    
-    await user.save();
-    user = {
-      _id: user._id,
-      fullName: user.fullName,
-      email: user.email,
-      phoneNumber: user.phoneNumber,
-      role: user.role,
-      profile: user.profile,
-    };
-    return res.status(200).json({
-      message: "profile updated successfully",
-      user,
-      success: true,
-    });
-  } catch (error) {
-    console.log(error);
-  }
-};
 
 export const getProfile = async (req, res) => {
   try {
@@ -186,6 +141,113 @@ export const getProfile = async (req, res) => {
     return res.status(500).json({
       message: "Server error",
       success: false,
+    });
+  }
+};
+
+export const updateProfile = async (req, res) => {
+  try {
+    const userId = req.id; // Assuming this is set by auth middleware
+    const {
+      fullName,
+      email,
+      phoneNumber,
+      profile
+    } = req.body;
+
+    // Find the user
+    let user = await User.findById(userId);
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        message: "User not found"
+      });
+    }
+
+    // Update basic fields
+    if (fullName) user.fullName = fullName;
+    if (email) user.email = email;
+    if (phoneNumber) user.phoneNumber = phoneNumber;
+
+    // Update profile fields if they exist
+    if (profile) {
+      // Initialize profile object if it doesn't exist
+      if (!user.profile) {
+        user.profile = {};
+      }
+
+      // Update basic profile fields
+      if (profile.bio !== undefined) user.profile.bio = profile.bio;
+      if (profile.date_of_birth !== undefined) user.profile.date_of_birth = profile.date_of_birth;
+      if (profile.address !== undefined) user.profile.address = profile.address;
+      if (profile.city !== undefined) user.profile.city = profile.city;
+      if (profile.state !== undefined) user.profile.state = profile.state;
+      if (profile.country !== undefined) user.profile.country = profile.country;
+
+      // Update arrays (ensuring they're arrays before assigning)
+      if (Array.isArray(profile.technical_skills)) {
+        user.profile.technical_skills = profile.technical_skills;
+      }
+      if (Array.isArray(profile.soft_skills)) {
+        user.profile.soft_skills = profile.soft_skills;
+      }
+      if (Array.isArray(profile.languages_known)) {
+        user.profile.languages_known = profile.languages_known;
+      }
+      if (Array.isArray(profile.additional_certifications)) {
+        user.profile.additional_certifications = profile.additional_certifications;
+      }
+
+      // Update education
+      if (profile.education) {
+        user.profile.education = {
+          degree: profile.education.degree || user.profile.education?.degree,
+          institution: profile.education.institution || user.profile.education?.institution,
+          year_of_passing: profile.education.year_of_passing || user.profile.education?.year_of_passing
+        };
+      }
+
+      // Update experience
+      if (profile.experience) {
+        user.profile.experience = {
+          position: profile.experience.position || user.profile.experience?.position,
+          company_name: profile.experience.company_name || user.profile.experience?.company_name,
+          duration: profile.experience.duration || user.profile.experience?.duration,
+          description: profile.experience.description || user.profile.experience?.description
+        };
+      }
+
+      // Update professional links
+      if (profile.portfolio !== undefined) user.profile.portfolio = profile.portfolio;
+      if (profile.linkedin_profile !== undefined) user.profile.linkedin_profile = profile.linkedin_profile;
+      if (profile.github_profile !== undefined) user.profile.github_profile = profile.github_profile;
+    }
+
+    // Save the updated user
+    await user.save();
+
+    // Prepare the response object
+    const responseUser = {
+      _id: user._id,
+      fullName: user.fullName,
+      email: user.email,
+      phoneNumber: user.phoneNumber,
+      role: user.role,
+      profile: user.profile
+    };
+
+    return res.status(200).json({
+      success: true,
+      message: "Profile updated successfully",
+      user: responseUser
+    });
+
+  } catch (error) {
+    console.error("Error updating profile:", error);
+    return res.status(500).json({
+      success: false,
+      message: "An error occurred while updating the profile",
+      error: error instanceof Error ? error.message : "Unknown error"
     });
   }
 };

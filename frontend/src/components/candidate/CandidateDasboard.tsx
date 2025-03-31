@@ -11,8 +11,9 @@ import { Card, CardDescription } from "@/components/ui/card"
 import { CardContent } from "@/components/ui/card"
 import { CardHeader } from "@/components/ui/card"
 import { CardTitle } from "@/components/ui/card"
+import { User, Code, GraduationCap, Briefcase, FileText, Link, LayoutDashboard, Linkedin, Github } from "lucide-react"
 
-// Updated interface to match the full user profile schema
+// full user profile schema
 interface Candidate {
   _id: string
   fullName: string
@@ -442,21 +443,7 @@ const CandidateDashboard = () => {
                   <Card className="border shadow-sm">
                     <CardHeader className="pb-2">
                       <CardTitle className="text-lg flex items-center gap-2">
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          width="18"
-                          height="18"
-                          viewBox="0 0 24 24"
-                          fill="none"
-                          stroke="currentColor"
-                          strokeWidth="2"
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          className="lucide lucide-user"
-                        >
-                          <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2" />
-                          <circle cx="12" cy="7" r="4" />
-                        </svg>
+                        <User className="w-4 h-4" />
                         Personal Information
                       </CardTitle>
                     </CardHeader>
@@ -490,21 +477,7 @@ const CandidateDashboard = () => {
                   <Card className="border shadow-sm">
                     <CardHeader className="pb-2">
                       <CardTitle className="text-lg flex items-center gap-2">
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          width="18"
-                          height="18"
-                          viewBox="0 0 24 24"
-                          fill="none"
-                          stroke="currentColor"
-                          strokeWidth="2"
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          className="lucide lucide-code"
-                        >
-                          <polyline points="16 18 22 12 16 6" />
-                          <polyline points="8 6 2 12 8 18" />
-                        </svg>
+                        <Code className="w-4 h-4" />
                         Skills & Languages
                       </CardTitle>
                     </CardHeader>
@@ -567,21 +540,7 @@ const CandidateDashboard = () => {
                   <Card className="border shadow-sm">
                     <CardHeader className="pb-2">
                       <CardTitle className="text-lg flex items-center gap-2">
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          width="18"
-                          height="18"
-                          viewBox="0 0 24 24"
-                          fill="none"
-                          stroke="currentColor"
-                          strokeWidth="2"
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          className="lucide lucide-graduation-cap"
-                        >
-                          <path d="M22 10v6M2 10l10-5 10 5-10 5z" />
-                          <path d="M6 12v5c0 2 2 3 6 3s6-1 6-3v-5" />
-                        </svg>
+                        <GraduationCap className="w-4 h-4" />
                         Education & Certifications
                       </CardTitle>
                     </CardHeader>
@@ -617,21 +576,7 @@ const CandidateDashboard = () => {
                   <Card className="border shadow-sm">
                     <CardHeader className="pb-2">
                       <CardTitle className="text-lg flex items-center gap-2">
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          width="18"
-                          height="18"
-                          viewBox="0 0 24 24"
-                          fill="none"
-                          stroke="currentColor"
-                          strokeWidth="2"
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          className="lucide lucide-briefcase"
-                        >
-                          <rect width="20" height="14" x="2" y="7" rx="2" ry="2" />
-                          <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16" />
-                        </svg>
+                        <Briefcase className="w-4 h-4" />
                         Work Experience
                       </CardTitle>
                     </CardHeader>
@@ -658,24 +603,7 @@ const CandidateDashboard = () => {
             <Card className="border shadow-sm">
               <CardHeader className="pb-2">
                 <CardTitle className="text-lg flex items-center gap-2">
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="18"
-                    height="18"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    className="lucide lucide-file-text"
-                  >
-                    <path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z" />
-                    <polyline points="14 2 14 8 20 8" />
-                    <line x1="16" x2="8" y1="13" y2="13" />
-                    <line x1="16" x2="8" y1="17" y2="17" />
-                    <line x1="10" x2="8" y1="9" y2="9" />
-                  </svg>
+                  <FileText className="w-4 h-4" />
                   Bio
                 </CardTitle>
               </CardHeader>
@@ -692,21 +620,7 @@ const CandidateDashboard = () => {
             <Card className="border shadow-sm">
               <CardHeader className="pb-2">
                 <CardTitle className="text-lg flex items-center gap-2">
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="18"
-                    height="18"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    className="lucide lucide-link"
-                  >
-                    <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71" />
-                    <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71" />
-                  </svg>
+                  <Link className="w-4 h-4" />
                   Professional Links
                 </CardTitle>
               </CardHeader>
@@ -718,23 +632,7 @@ const CandidateDashboard = () => {
                     rel="noopener noreferrer"
                     className={`flex items-center gap-2 p-3 rounded-lg border ${candidate.profile?.portfolio ? "hover:bg-muted cursor-pointer" : "opacity-50 cursor-not-allowed"}`}
                   >
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      width="18"
-                      height="18"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeWidth="2"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      className="lucide lucide-layout-dashboard"
-                    >
-                      <rect width="7" height="9" x="3" y="3" rx="1" />
-                      <rect width="7" height="5" x="14" y="3" rx="1" />
-                      <rect width="7" height="9" x="14" y="12" rx="1" />
-                      <rect width="7" height="5" x="3" y="16" rx="1" />
-                    </svg>
+                    <LayoutDashboard className="w-4 h-4" />
                     <div>
                       <div className="font-medium">Portfolio</div>
                       <div className="text-xs text-muted-foreground truncate max-w-[180px]">
@@ -749,22 +647,7 @@ const CandidateDashboard = () => {
                     rel="noopener noreferrer"
                     className={`flex items-center gap-2 p-3 rounded-lg border ${candidate.profile?.linkedin_profile ? "hover:bg-muted cursor-pointer" : "opacity-50 cursor-not-allowed"}`}
                   >
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      width="18"
-                      height="18"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeWidth="2"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      className="lucide lucide-linkedin"
-                    >
-                      <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z" />
-                      <rect width="4" height="12" x="2" y="9" />
-                      <circle cx="4" cy="4" r="2" />
-                    </svg>
+                    <Linkedin className="w-4 h-4" />
                     <div>
                       <div className="font-medium">LinkedIn</div>
                       <div className="text-xs text-muted-foreground truncate max-w-[180px]">
@@ -779,21 +662,7 @@ const CandidateDashboard = () => {
                     rel="noopener noreferrer"
                     className={`flex items-center gap-2 p-3 rounded-lg border ${candidate.profile?.github_profile ? "hover:bg-muted cursor-pointer" : "opacity-50 cursor-not-allowed"}`}
                   >
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      width="18"
-                      height="18"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeWidth="2"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      className="lucide lucide-github"
-                    >
-                      <path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.403 5.403 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4" />
-                      <path d="M9 18c-4.51 2-5-2-7-2" />
-                    </svg>
+                    <Github className="w-4 h-4" />
                     <div>
                       <div className="font-medium">GitHub</div>
                       <div className="text-xs text-muted-foreground truncate max-w-[180px]">

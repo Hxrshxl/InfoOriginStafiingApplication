@@ -1,8 +1,13 @@
 import React from 'react'
+import RecuiterTabbar from './RecuiterTabbar'
 
 const RecruiterDashboard = () => {
   return (
-    <div>RecruiterDashboard</div>
+    <>
+    <div>
+      <RecuiterTabbar/>
+    </div>
+    </>
   )
 }
 

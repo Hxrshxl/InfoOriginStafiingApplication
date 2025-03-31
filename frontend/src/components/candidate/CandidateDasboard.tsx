@@ -226,9 +226,14 @@ const CandidateDashboard = () => {
           portfolio: formData.portfolio,
           linkedin_profile: formData.linkedin_profile,
           github_profile: formData.github_profile,
-          profile_picture: formData.profile_picture, // Include the profile picture
+          profile_picture: formData.profile_picture, // Ensure this is included
         },
       }
+
+      console.log(
+        "Sending update with profile picture:",
+        formData.profile_picture ? "Image data present" : "No image data",
+      )
 
       // Send the update request
       const response = await fetch("http://localhost:3000/api/v1/user/profile/update", {
@@ -245,7 +250,17 @@ const CandidateDashboard = () => {
       const data = await response.json()
 
       if (data.success) {
+        // Update the local state with the returned user data
         setCandidate(data.user)
+
+        // Force a re-render by updating the state with the new profile picture
+        if (data.user.profile?.profile_picture) {
+          setFormData((prev) => ({
+            ...prev,
+            profile_picture: data.user.profile.profile_picture,
+          }))
+        }
+
         setOpen(false)
       } else {
         throw new Error(data.message || "Failed to update profile")

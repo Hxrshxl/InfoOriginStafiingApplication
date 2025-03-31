@@ -1,78 +1,80 @@
-import { useState, useEffect } from 'react';
-import { BriefcaseIcon, MapPinIcon, BanknoteIcon as BanknotesIcon } from 'lucide-react';
-import toast from 'react-hot-toast';
-import { CandidateTabBar } from './CandidateTabBar';
+"use client"
+
+import { useState, useEffect } from "react"
+import { BriefcaseIcon, MapPinIcon, BanknoteIcon as BanknotesIcon } from "lucide-react"
+import toast from "react-hot-toast"
+import { CandidateTabBar } from "./CandidateTabBar"
 
 interface Job {
-  _id: string;
-  title: string;
-  description: string;
-  salary: number;
-  experienceLevel: string;
-  location: string;
-  jobType: string;
-  position: string;
-  company_name: string;
+  _id: string
+  title: string
+  description: string
+  salary: number
+  experienceLevel: string
+  location: string
+  jobType: string
+  position: string
+  company_name: string
 }
 
 function JobListings() {
-  const [jobs, setJobs] = useState<Job[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-  const [currentPage, setCurrentPage] = useState(1);
-  const [totalPages, setTotalPages] = useState(1);
+  const [jobs, setJobs] = useState<Job[]>([])
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
+  const [currentPage, setCurrentPage] = useState(1)
+  const [totalPages, setTotalPages] = useState(1)
 
   const fetchJobs = async (page: number) => {
     try {
-      setLoading(true);
-      setError(null); // Reset error state before new fetch
-      
+      setLoading(true)
+      setError(null) 
+
       const response = await fetch(`http://localhost:3000/api/v1/job/get`, {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
-          "Accept": "application/json"
-        }
-      });
+          Accept: "application/json",
+        },
+      })
 
       if (!response.ok) {
-        const errorData = await response.json().catch(() => ({}));
-        throw new Error(errorData.message || `HTTP error! status: ${response.status}`);
+        const errorData = await response.json().catch(() => ({}))
+        throw new Error(errorData.message || `HTTP error! status: ${response.status}`)
       }
 
-      const result = await response.json();
+      const result = await response.json()
 
       if (!result.success) {
-        throw new Error(result.message || "Failed to fetch jobs");
+        throw new Error(result.message || "Failed to fetch jobs")
       }
 
-      setJobs(result.data?.jobs || []);
-      setTotalPages(result.data?.totalPages || 1);
-      setCurrentPage(page);
+      setJobs(result.jobs || [])
+      setTotalPages(Math.ceil((result.jobs?.length || 0) / 10) || 1)
+      setCurrentPage(page)
     } catch (err: any) {
-      console.error("Error fetching jobs:", err);
-      setError(err.message || "Failed to fetch jobs");
-      toast.error(err.message || "Failed to fetch jobs");
+      console.error("Error fetching jobs:", err)
+      setError(err.message || "Failed to fetch jobs")
+      toast.error(err.message || "Failed to fetch jobs")
     } finally {
-      setLoading(false);
+      setLoading(false)
     }
-  };
+  }
 
   useEffect(() => {
-    fetchJobs(currentPage);
-  }, [currentPage]);
+    fetchJobs(currentPage)
+  }, [currentPage])
 
   const goToNextPage = () => {
     if (currentPage < totalPages) {
-      setCurrentPage(prev => prev + 1);
+      setCurrentPage((prev) => prev + 1)
     }
-  };
+  }
 
   const goToPrevPage = () => {
     if (currentPage > 1) {
-      setCurrentPage(prev => prev - 1);
+      setCurrentPage((prev) => prev - 1)
     }
-  };
+  }
 
   return (
     <>
@@ -132,22 +134,40 @@ function JobListings() {
                 <table className="min-w-full divide-y divide-gray-200">
                   <thead className="bg-gray-50">
                     <tr>
-                      <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      <th
+                        scope="col"
+                        className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                      >
                         Position
                       </th>
-                      <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      <th
+                        scope="col"
+                        className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                      >
                         Company
                       </th>
-                      <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      <th
+                        scope="col"
+                        className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                      >
                         Location
                       </th>
-                      <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      <th
+                        scope="col"
+                        className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                      >
                         Experience
                       </th>
-                      <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      <th
+                        scope="col"
+                        className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                      >
                         Salary
                       </th>
-                      <th scope="col" className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      <th
+                        scope="col"
+                        className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider"
+                      >
                         Actions
                       </th>
                     </tr>
@@ -177,14 +197,12 @@ function JobListings() {
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap">
                           <div className="flex items-center text-sm text-gray-900">
-                            <BanknotesIcon className="flex-shrink-0 mr-1.5 h-4 w-4 text-gray-400" />
-                            ₹{job.salary.toLocaleString()}
+                            <BanknotesIcon className="flex-shrink-0 mr-1.5 h-4 w-4 text-gray-400" />₹
+                            {job.salary.toLocaleString()}
                           </div>
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                          <button
-                            className="inline-flex items-center px-3 py-1.5 border border-transparent text-xs font-medium rounded-full shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-                          >
+                          <button className="inline-flex items-center px-3 py-1.5 border border-transparent text-xs font-medium rounded-full shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
                             Apply Now
                           </button>
                         </td>
@@ -198,7 +216,8 @@ function JobListings() {
         </div>
       </div>
     </>
-  );
+  )
 }
 
-export default JobListings;
+export default JobListings
+

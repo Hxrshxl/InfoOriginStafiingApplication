@@ -21,7 +21,10 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "../ui/tabs"
 interface ProfileEditDialogProps {
   open: boolean
   onOpenChange: (open: boolean) => void
-  formData: any
+  formData: {
+    profile_picture?: string
+    [key: string]: any
+  }
   onChange: (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void
   onSave: () => void
   loading: boolean
@@ -77,6 +80,45 @@ export function ProfileEditDialog({ open, onOpenChange, formData, onChange, onSa
                   onChange={onChange}
                   className="col-span-3"
                 />
+              </div>
+
+              <div className="grid grid-cols-4 items-center gap-4">
+                <Label htmlFor="profile_picture" className="text-right">
+                  Profile Picture
+                </Label>
+                <div className="col-span-3">
+                  <Input
+                    id="profile_picture"
+                    name="profile_picture"
+                    type="file"
+                    accept="image/*"
+                    onChange={(e) => {
+                      if (e.target.files && e.target.files[0]) {
+                        const file = e.target.files[0]
+                        const reader = new FileReader()
+                        reader.onloadend = () => {
+                          // Set the base64 string to the formData
+                          onChange({
+                            target: {
+                              name: "profile_picture",
+                              value: reader.result as string,
+                            },
+                          } as React.ChangeEvent<HTMLInputElement>)
+                        }
+                        reader.readAsDataURL(file)
+                      }
+                    }}
+                  />
+                  {formData.profile_picture && (
+                    <div className="mt-2">
+                      <img
+                        src={formData.profile_picture || "/placeholder.svg"}
+                        alt="Profile Preview"
+                        className="w-24 h-24 rounded-full object-cover border border-gray-200"
+                      />
+                    </div>
+                  )}
+                </div>
               </div>
 
               <div className="grid grid-cols-4 items-center gap-4">

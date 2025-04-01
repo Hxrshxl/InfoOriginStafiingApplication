@@ -9,6 +9,7 @@ import RecruiterDashboard from "./components/recruiter/RecruiterDashboard"
 import { Login } from "./components/auth/Login"
 import AuthPage from "./components/auth/AuthPage"
 import CandidateDashboard from "./components/candidate/CandidateDasboard"
+import RecruiterJobListings from "./components/recruiter/RecruiterJobListings"
 
 const App = () => {
   return (
@@ -30,14 +31,7 @@ const App = () => {
                 </ProtectedRoute>
               }
             />
-            {/* <Route
-              path="/candidate-profile"
-              element={
-                <ProtectedRoute allowedRoles={["candidate"]}>
-                  <CandidateProfile />
-                </ProtectedRoute>
-              }
-            /> */}
+
             <Route
               path="/job-listings"
               element={
@@ -53,6 +47,15 @@ const App = () => {
               element={
                 <ProtectedRoute allowedRoles={["recruiter"]}>
                   <RecruiterDashboard />
+                </ProtectedRoute>
+              }
+            />
+
+<Route
+              path="/recruiter-job-listings"
+              element={
+                <ProtectedRoute allowedRoles={["recruiter"]}>
+                  <RecruiterJobListings />
                 </ProtectedRoute>
               }
             />

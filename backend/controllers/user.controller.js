@@ -90,6 +90,7 @@ export const login = async (req, res) => {
       .json({
         message: `Welcome back ${user.fullName}`,
         user,
+        token,  
         success: true,
       })
   } catch (error) {
@@ -247,3 +248,50 @@ export const updateProfile = async (req, res) => {
   }
 }
 
+// export const getAllCandidates = async (req, res) => {
+//   try {
+//     // Check if the user is an admin
+//     if (req.user.role !== "recruiter") {
+//       return res.status(403).json({
+//         success: false,
+//         message: "Access denied. Recruiters only."
+//       });
+//     }
+
+//     // Fetch all users with role 'candidate'
+//     const candidates = await User.find({ role: "candidate" }).select("-password");
+
+//     return res.status(200).json({
+//       success: true,
+//       message: "Candidates fetched successfully",
+//       candidates
+//     });
+//   } catch (error) {
+//     console.error("Error fetching candidates:", error);
+//     return res.status(500).json({
+//       success: false,
+//       message: "An error occurred while fetching candidates",
+//       error: error.message
+//     });
+//   }
+// };
+
+
+export const getAllCandidates = async (req, res) => {
+  try {
+    const candidates = await User.find({ role: "candidate" }).select("-password");
+
+    return res.status(200).json({
+      success: true,
+      message: "Candidates fetched successfully",
+      candidates
+    });
+  } catch (error) {
+    console.error("Error fetching candidates:", error);
+    return res.status(500).json({
+      success: false,
+      message: "An error occurred while fetching candidates",
+      error: error.message
+    });
+  }
+};

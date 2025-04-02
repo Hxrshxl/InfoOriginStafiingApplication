@@ -227,7 +227,7 @@ const CandidateDashboard = () => {
           portfolio: formData.portfolio,
           linkedin_profile: formData.linkedin_profile,
           github_profile: formData.github_profile,
-          profile_picture: formData.profile_picture, // Ensure this is included
+          profile_picture: formData.profile_picture, 
         },
       }
 
@@ -251,10 +251,8 @@ const CandidateDashboard = () => {
       const data = await response.json()
 
       if (data.success) {
-        // Update the local state with the returned user data
         setCandidate(data.user)
-
-        // Force a re-render by updating the state with the new profile picture
+        
         if (data.user.profile?.profile_picture) {
           setFormData((prev) => ({
             ...prev,

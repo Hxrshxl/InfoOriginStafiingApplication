@@ -50,7 +50,6 @@ function RecruiterJobListings() {
       setLoading(true)
       setError(null)
 
-      // Changed from getadminjobs to get endpoint since that's what was working in your commented code
       const response = await fetch(`http://localhost:3000/api/v1/job/get`, {
         method: "GET",
         headers: {

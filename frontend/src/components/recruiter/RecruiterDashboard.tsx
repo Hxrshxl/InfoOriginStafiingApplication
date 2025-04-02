@@ -27,8 +27,6 @@ export default function RecruiterDashboard() {
     try {
       setLoading(true)
       setError(null)
-
-      // Using direct fetch instead of getAllCandidates since there's an issue with the endpoint
       const response = await fetch(`http://localhost:3000/api/v1/user/recruiter/candidates`, {
         method: "GET",
         headers: {
@@ -62,17 +60,6 @@ export default function RecruiterDashboard() {
     fetchCandidates()
   }, [])
 
-  const goToNextPage = () => {
-    if (currentPage < totalPages) {
-      setCurrentPage((prev) => prev + 1)
-    }
-  }
-
-  const goToPrevPage = () => {
-    if (currentPage > 1) {
-      setCurrentPage((prev) => prev - 1)
-    }
-  }
 
   const handleViewCandidate = (candidate: User) => {
     setSelectedCandidate(candidate)
@@ -80,12 +67,11 @@ export default function RecruiterDashboard() {
   }
 
   const handleUpdateCandidate = (candidate: User) => {
-    // To be implemented later
+ 
     toast.info(` will be implemented later`)
   }
 
   const handleDeleteCandidate = (candidate: User) => {
-    // To be implemented later
     toast.info(` will be implemented later`)
   }
 
@@ -108,39 +94,8 @@ export default function RecruiterDashboard() {
           <div className="flex flex-col md:flex-row items-center justify-between mb-8 gap-4">
             <h1 className="text-3xl font-bold text-gray-900">All Candidates</h1>
             <div className="flex items-center w-full md:w-auto space-x-4">
-              <div className="relative w-full md:w-80">
-                <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-gray-500" />
-                <Input
-                  type="search"
-                  placeholder="Search candidates..."
-                  className="pl-8 w-full"
-                  value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
-                />
-              </div>
-              <span className="text-sm text-gray-500 whitespace-nowrap">
-                Page {currentPage} of {totalPages}
-              </span>
-              <div className="flex space-x-2">
-                <Button
-                  variant="outline"
-                  onClick={goToPrevPage}
-                  disabled={currentPage === 1}
-                  className="flex items-center gap-1"
-                >
-                  <ArrowLeftIcon className="h-4 w-4" />
-                  Previous
-                </Button>
-                <Button
-                  variant="outline"
-                  onClick={goToNextPage}
-                  disabled={currentPage === totalPages}
-                  className="flex items-center gap-1"
-                >
-                  Next
-                  <ArrowRightIcon className="h-4 w-4" />
-                </Button>
-              </div>
+             
+             
             </div>
           </div>
 

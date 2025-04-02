@@ -8,11 +8,9 @@ import type {
   JobApplication,
 } from "./types"
 
-
 const API_URL = "http://localhost:3000/api/v1"
 
 // Helper function to handle API responses\
-
 
 // Authentication API functions
 export const loginUser = async (credentials: LoginCredentials): Promise<ApiResponse<User>> => {
@@ -162,10 +160,6 @@ export const updateApplicationStatus = async (
   return handleResponse<ApiResponse>(response)
 }
 
-
-
-
-
 // Helper function to handle API responses\
 const handleResponse = async <T>(response: Response)
 : Promise<T> =>
@@ -213,26 +207,6 @@ export const getAllCandidates = async (): Promise<User[]> => {
   }
 }
 
-// Function to update a candidate
-export const updateCandidate = async (updateData: {
-  userId: string
-  fullName: string
-  email: string
-  phoneNumber: string
-  profile: any
-}): Promise<ApiResponse<User>> => {
-  const response = await fetch(`${API_URL}/user/admin/update-candidate`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    credentials: "include",
-    body: JSON.stringify(updateData),
-  })
-
-  return handleResponse<ApiResponse<User>>(response)
-}
-
 // Function to delete a candidate
 export const deleteCandidate = async (candidateId: string): Promise<ApiResponse> => {
   const response = await fetch(`${API_URL}/user/admin/delete-candidate/${candidateId}`, {
@@ -244,264 +218,25 @@ export const deleteCandidate = async (candidateId: string): Promise<ApiResponse>
   return handleResponse<ApiResponse>(response)
 }
 
+// Update the updateCandidate function to use the correct endpoint for recruiters editing candidates
+export const updateCandidate = async (
+  candidateId: string,
+  updateData: {
+    fullName: string
+    email: string
+    phoneNumber: string
+    profile: any
+  },
+): Promise<ApiResponse<User>> => {
+  const response = await fetch(`${API_URL}/user/recruiter/candidates/${candidateId}/edit`, {
+    method: "PUT", // Changed from POST to PUT to match your router definition
+    headers: {
+      "Content-Type": "application/json",
+    },
+    credentials: "include",
+    body: JSON.stringify(updateData),
+  })
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-// import type {
-//   LoginCredentials,
-//   RegisterCredentials,
-//   ApiResponse,
-//   User,
-//   ProfileUpdateData,
-//   Job,
-//   JobApplication,
-// } from "./types"
-
-// const API_URL = "http://localhost:3000/api/v1"
-
-// // Helper function to handle API responses\
-// const handleResponse = async <T>(response: Response)
-// : Promise<T> =>
-// {
-//   if (!response.ok) {
-//     const error = await response.json()
-//     throw new Error(error.message || "Something went wrong")
-//   }
-//   return response.json();
-// }
-
-// // Authentication API functions
-// export const loginUser = async (credentials: LoginCredentials): Promise<ApiResponse<User>> => {
-//   const response = await fetch(`${API_URL}/user/login`, {
-//     method: "POST",
-//     headers: {
-//       "Content-Type": "application/json",
-//     },
-//     credentials: "include",
-//     body: JSON.stringify(credentials),
-//   })
-
-//   return handleResponse<ApiResponse<User>>(response)
-// }
-
-// export const registerUser = async (credentials: RegisterCredentials): Promise<ApiResponse> => {
-//   const response = await fetch(`${API_URL}/user/register`, {
-//     method: "POST",
-//     headers: {
-//       "Content-Type": "application/json",
-//     },
-//     credentials: "include",
-//     body: JSON.stringify(credentials),
-//   })
-
-//   return handleResponse<ApiResponse>(response)
-// }
-
-// export const logoutUser = async (): Promise<ApiResponse> => {
-//   const response = await fetch(`${API_URL}/user/logout`, {
-//     method: "GET",
-//     credentials: "include",
-//   })
-
-//   return handleResponse<ApiResponse>(response)
-// }
-
-// // Function to check if user is authenticated
-// export const getCurrentUser = async (): Promise<User | null> => {
-//   try {
-//     const response = await fetch(`${API_URL}/user/getprofile`, {
-//       // Changed from /profile to /getprofile
-//       method: "GET",
-//       credentials: "include",
-//     })
-
-//     if (!response.ok) {
-//       return null
-//     }
-
-//     const data = await response.json()
-//     return data.user
-//   } catch (error) {
-//     return null
-//   }
-// }
-
-// // Function to update user profile
-// export const updateUserProfile = async (profileData: ProfileUpdateData): Promise<ApiResponse<User>> => {
-//   const response = await fetch(`${API_URL}/user/profile/update`, {
-//     method: "POST",
-//     headers: {
-//       "Content-Type": "application/json",
-//     },
-//     credentials: "include",
-//     body: JSON.stringify(profileData),
-//   })
-
-//   return handleResponse<ApiResponse<User>>(response)
-// }
-
-// // Job related functions
-// export const getJobs = async (): Promise<Job[]> => {
-//   const response = await fetch(`${API_URL}/job`, {
-//     method: "GET",
-//     credentials: "include",
-//   })
-
-//   return handleResponse<{ jobs: Job[] }>(response).then((data) => data.jobs || [])
-// }
-
-// export const getJobById = async (jobId: string): Promise<Job> => {
-//   const response = await fetch(`${API_URL}/job/${jobId}`, {
-//     method: "GET",
-//     credentials: "include",
-//   })
-
-//   return handleResponse<{ job: Job }>(response).then((data) => data.job)
-// }
-
-// export const createJob = async (jobData: Omit<Job, "_id" | "posted_by" | "posted_date">): Promise<ApiResponse> => {
-//   const response = await fetch(`${API_URL}/job/create`, {
-//     method: "POST",
-//     headers: {
-//       "Content-Type": "application/json",
-//     },
-//     credentials: "include",
-//     body: JSON.stringify(jobData),
-//   })
-
-//   return handleResponse<ApiResponse>(response)
-// }
-
-// export const applyForJob = async (jobId: string, coverLetter?: string): Promise<ApiResponse> => {
-//   const response = await fetch(`${API_URL}/application/apply`, {
-//     method: "POST",
-//     headers: {
-//       "Content-Type": "application/json",
-//     },
-//     credentials: "include",
-//     body: JSON.stringify({ jobId, coverLetter }),
-//   })
-
-//   return handleResponse<ApiResponse>(response)
-// }
-
-// export const getCandidateApplications = async (): Promise<JobApplication[]> => {
-//   const response = await fetch(`${API_URL}/application/candidate`, {
-//     method: "GET",
-//     credentials: "include",
-//   })
-
-//   return handleResponse<{ applications: JobApplication[] }>(response).then((data) => data.applications || [])
-// }
-
-// export const getRecruiterApplications = async (): Promise<JobApplication[]> => {
-//   const response = await fetch(`${API_URL}/application/recruiter`, {
-//     method: "GET",
-//     credentials: "include",
-//   })
-
-//   return handleResponse<{ applications: JobApplication[] }>(response).then((data) => data.applications || [])
-// }
-
-// // Updated function to get all candidates
-// export const getAllCandidates = async (): Promise<User[]> => {
-//   try {
-//     const response = await fetch(`${API_URL}/user/candidates`, {
-//       method: "GET",
-//       credentials: "include",
-//       headers: { "Content-Type": "application/json" },
-//     })
-
-//     if (!response.ok) {
-//       const errorData = await response.json()
-//       throw new Error(errorData.message || "Failed to fetch candidates")
-//     }
-
-//     const data = await response.json()
-
-//     // Check if data has the expected structure
-//     if (!data || !Array.isArray(data.candidates)) {
-//       // If the API returns a different structure, try to adapt
-//       if (Array.isArray(data)) {
-//         return data
-//       } else if (data.users && Array.isArray(data.users)) {
-//         return data.users.filter((user) => user.role === "candidate")
-//       } else {
-//         console.error("Unexpected data structure:", data)
-//         return []
-//       }
-//     }
-
-//     return data.candidates
-//   } catch (error) {
-//     console.error("Error fetching candidates:", error)
-//     throw error
-//   }
-// }
-
-// export const updateApplicationStatus = async (
-//   applicationId: string,
-//   status: JobApplication["status"],
-// ): Promise<ApiResponse> => {
-//   const response = await fetch(`${API_URL}/application/${applicationId}/status`, {
-//     method: "PUT",
-//     headers: {
-//       "Content-Type": "application/json",
-//     },
-//     credentials: "include",
-//     body: JSON.stringify({ status }),
-//   })
-
-//   return handleResponse<ApiResponse>(response)
-// }
-
-// // Admin/Recruiter functions for managing candidates
-// export const updateCandidate = async (updateData: {
-//   userId: string
-//   fullName: string
-//   email: string
-//   phoneNumber: string
-//   profile: any
-// }): Promise<ApiResponse<User>> => {
-//   const response = await fetch(`${API_URL}/user/admin/update-candidate`, {
-//     method: "POST",
-//     headers: {
-//       "Content-Type": "application/json",
-//     },
-//     credentials: "include",
-//     body: JSON.stringify(updateData),
-//   })
-
-//   return handleResponse<ApiResponse<User>>(response)
-// }
-
-// export const deleteCandidate = async (candidateId: string): Promise<ApiResponse> => {
-//   const response = await fetch(`${API_URL}/user/admin/delete-candidate/${candidateId}`, {
-//     method: "DELETE",
-//     credentials: "include",
-//     headers: { "Content-Type": "application/json" },
-//   })
-
-//   return handleResponse<ApiResponse>(response)
-// }
+  return handleResponse<ApiResponse<User>>(response)
+}
 

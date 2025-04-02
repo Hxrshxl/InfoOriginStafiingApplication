@@ -1,6 +1,6 @@
 "use client"
 
-import type React from "react"
+import React from "react"
 
 import { useState } from "react"
 import type { User } from "../../lib/types"
@@ -19,6 +19,7 @@ import { Textarea } from "@/components/ui/textarea"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { Separator } from "@/components/ui/separator"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { toast } from "sonner"
 
 interface CandidateEditDialogProps {
   open: boolean
@@ -63,6 +64,46 @@ export function CandidateEditDialog({ open, onOpenChange, candidate, onSave }: C
     },
   })
 
+  // Reset form data when candidate changes
+  React.useEffect(() => {
+    if (candidate) {
+      setFormData({
+        fullName: candidate.fullName || "",
+        email: candidate.email || "",
+        phoneNumber: candidate.phoneNumber || "",
+        profile: {
+          bio: candidate.profile?.bio || "",
+          date_of_birth: candidate.profile?.date_of_birth || "",
+          address: candidate.profile?.address || "",
+          city: candidate.profile?.city || "",
+          state: candidate.profile?.state || "",
+          country: candidate.profile?.country || "",
+
+          education: {
+            degree: candidate.profile?.education?.degree || "",
+            institution: candidate.profile?.education?.institution || "",
+            year_of_passing: candidate.profile?.education?.year_of_passing || "",
+          },
+
+          experience: {
+            company_name: candidate.profile?.experience?.company_name || "",
+            position: candidate.profile?.experience?.position || "",
+            duration: candidate.profile?.experience?.duration || "",
+            description: candidate.profile?.experience?.description || "",
+          },
+
+          technical_skills: candidate.profile?.technical_skills?.join(", ") || "",
+          soft_skills: candidate.profile?.soft_skills?.join(", ") || "",
+          languages_known: candidate.profile?.languages_known?.join(", ") || "",
+
+          portfolio: candidate.profile?.portfolio || "",
+          linkedin_profile: candidate.profile?.linkedin_profile || "",
+          github_profile: candidate.profile?.github_profile || "",
+        },
+      })
+    }
+  }, [candidate])
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target
 
@@ -98,19 +139,44 @@ export function CandidateEditDialog({ open, onOpenChange, candidate, onSave }: C
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
 
+    // Basic validation
+    if (!formData.fullName.trim()) {
+      toast.error("Full name is required")
+      return
+    }
+
+    if (!formData.email.trim()) {
+      toast.error("Email is required")
+      return
+    }
+
+    if (!formData.phoneNumber) {
+      toast.error("Phone number is required")
+      return
+    }
+
     // Process arrays from comma-separated strings
     const processedData = {
       ...formData,
       profile: {
         ...formData.profile,
         technical_skills: formData.profile.technical_skills
-          ? formData.profile.technical_skills.split(",").map((skill) => skill.trim())
+          ? formData.profile.technical_skills
+              .split(",")
+              .map((skill) => skill.trim())
+              .filter(Boolean)
           : [],
         soft_skills: formData.profile.soft_skills
-          ? formData.profile.soft_skills.split(",").map((skill) => skill.trim())
+          ? formData.profile.soft_skills
+              .split(",")
+              .map((skill) => skill.trim())
+              .filter(Boolean)
           : [],
         languages_known: formData.profile.languages_known
-          ? formData.profile.languages_known.split(",").map((lang) => lang.trim())
+          ? formData.profile.languages_known
+              .split(",")
+              .map((lang) => lang.trim())
+              .filter(Boolean)
           : [],
       },
     }
@@ -140,15 +206,28 @@ export function CandidateEditDialog({ open, onOpenChange, candidate, onSave }: C
                 <div className="grid grid-cols-2 gap-4">
                   <div className="space-y-2">
                     <Label htmlFor="fullName">Full Name</Label>
-                    <Input id="fullName" name="fullName" value={formData.fullName} onChange={handleChange} />
+                    <Input id="fullName" name="fullName" value={formData.fullName} onChange={handleChange} required />
                   </div>
                   <div className="space-y-2">
                     <Label htmlFor="email">Email</Label>
-                    <Input id="email" name="email" type="email" value={formData.email} onChange={handleChange} />
+                    <Input
+                      id="email"
+                      name="email"
+                      type="email"
+                      value={formData.email}
+                      onChange={handleChange}
+                      required
+                    />
                   </div>
                   <div className="space-y-2">
                     <Label htmlFor="phoneNumber">Phone Number</Label>
-                    <Input id="phoneNumber" name="phoneNumber" value={formData.phoneNumber} onChange={handleChange} />
+                    <Input
+                      id="phoneNumber"
+                      name="phoneNumber"
+                      value={formData.phoneNumber}
+                      onChange={handleChange}
+                      required
+                    />
                   </div>
                   <div className="space-y-2">
                     <Label htmlFor="profile.date_of_birth">Date of Birth</Label>
@@ -293,6 +372,7 @@ export function CandidateEditDialog({ open, onOpenChange, candidate, onSave }: C
                     value={formData.profile.technical_skills}
                     onChange={handleChange}
                     rows={2}
+                    placeholder="React, Node.js, TypeScript, etc."
                   />
                 </div>
                 <div className="space-y-2">
@@ -303,6 +383,7 @@ export function CandidateEditDialog({ open, onOpenChange, candidate, onSave }: C
                     value={formData.profile.soft_skills}
                     onChange={handleChange}
                     rows={2}
+                    placeholder="Communication, Leadership, Teamwork, etc."
                   />
                 </div>
                 <div className="space-y-2">
@@ -313,6 +394,7 @@ export function CandidateEditDialog({ open, onOpenChange, candidate, onSave }: C
                     value={formData.profile.languages_known}
                     onChange={handleChange}
                     rows={2}
+                    placeholder="English, Spanish, French, etc."
                   />
                 </div>
 
@@ -327,6 +409,7 @@ export function CandidateEditDialog({ open, onOpenChange, candidate, onSave }: C
                       type="url"
                       value={formData.profile.portfolio}
                       onChange={handleChange}
+                      placeholder="https://portfolio.com"
                     />
                   </div>
                   <div className="space-y-2">
@@ -337,6 +420,7 @@ export function CandidateEditDialog({ open, onOpenChange, candidate, onSave }: C
                       type="url"
                       value={formData.profile.linkedin_profile}
                       onChange={handleChange}
+                      placeholder="https://linkedin.com/in/username"
                     />
                   </div>
                   <div className="space-y-2">
@@ -347,6 +431,7 @@ export function CandidateEditDialog({ open, onOpenChange, candidate, onSave }: C
                       type="url"
                       value={formData.profile.github_profile}
                       onChange={handleChange}
+                      placeholder="https://github.com/username"
                     />
                   </div>
                 </div>

@@ -9,6 +9,7 @@ import { Card, CardContent } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import type { User } from "../../lib/types"
 import { CandidateViewDialog } from "./candidate-view-dialog"
+import { CandidateEditDialog } from "./candidate-edit-dialog"
 import { Badge } from "@/components/ui/badge"
 
 export default function RecruiterDashboard() {
@@ -19,7 +20,9 @@ export default function RecruiterDashboard() {
   const [totalPages, setTotalPages] = useState(1)
   const [searchTerm, setSearchTerm] = useState("")
   const [viewDialogOpen, setViewDialogOpen] = useState(false)
+  const [editDialogOpen, setEditDialogOpen] = useState(false)
   const [selectedCandidate, setSelectedCandidate] = useState<User | null>(null)
+  const [updateLoading, setUpdateLoading] = useState(false)
   const itemsPerPage = 10
 
   // Fetch all candidates
@@ -60,19 +63,79 @@ export default function RecruiterDashboard() {
     fetchCandidates()
   }, [])
 
-
   const handleViewCandidate = (candidate: User) => {
     setSelectedCandidate(candidate)
     setViewDialogOpen(true)
   }
 
   const handleUpdateCandidate = (candidate: User) => {
- 
-    toast.info(` will be implemented later`)
+    setSelectedCandidate(candidate)
+    setEditDialogOpen(true)
+  }
+
+  // Update the handleSaveCandidate function to use the correct API call
+  const handleSaveCandidate = async (updatedData: any) => {
+    if (!selectedCandidate) return
+
+    try {
+      setUpdateLoading(true)
+
+      // Prepare the data for the API
+      const updateData = {
+        fullName: updatedData.fullName,
+        email: updatedData.email,
+        phoneNumber: updatedData.phoneNumber,
+        profile: updatedData.profile,
+      }
+
+      // Use the correct API function with the candidate ID
+      const response = await fetch(
+        `http://localhost:3000/api/v1/user/recruiter/candidates/${selectedCandidate._id}/edit`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          credentials: "include",
+          body: JSON.stringify(updateData),
+        },
+      )
+
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({}))
+        throw new Error(errorData.message || `Failed to update candidate: ${response.status}`)
+      }
+
+      const data = await response.json()
+
+      if (data.success) {
+        toast.success("Candidate updated successfully")
+
+        // Update the candidate in the local state
+        setCandidates((prevCandidates) =>
+          prevCandidates.map((candidate) =>
+            candidate._id === selectedCandidate._id ? { ...candidate, ...updatedData } : candidate,
+          ),
+        )
+
+        // Close the dialog
+        setEditDialogOpen(false)
+
+        // Refresh the candidates list to get the updated data
+        fetchCandidates()
+      } else {
+        toast.error(data.message || "Failed to update candidate")
+      }
+    } catch (err: any) {
+      console.error("Error updating candidate:", err)
+      toast.error(err.message || "Failed to update candidate")
+    } finally {
+      setUpdateLoading(false)
+    }
   }
 
   const handleDeleteCandidate = (candidate: User) => {
-    toast.info(` will be implemented later`)
+    toast.info(`Delete functionality will be implemented later`)
   }
 
   // Filter candidates based on search term
@@ -94,8 +157,16 @@ export default function RecruiterDashboard() {
           <div className="flex flex-col md:flex-row items-center justify-between mb-8 gap-4">
             <h1 className="text-3xl font-bold text-gray-900">All Candidates</h1>
             <div className="flex items-center w-full md:w-auto space-x-4">
-             
-             
+              <div className="relative w-full md:w-64">
+                <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-gray-500" />
+                <Input
+                  type="search"
+                  placeholder="Search candidates..."
+                  className="pl-8"
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                />
+              </div>
             </div>
           </div>
 
@@ -113,7 +184,7 @@ export default function RecruiterDashboard() {
             </Card>
           )}
 
-          {!loading && !error && filteredCandidates.length === 0 && (
+          {/* {!loading && !error && filteredCandidates.length === 0 && (
             <div className="text-center py-12">
               <svg
                 className="mx-auto h-12 w-12 text-gray-400"
@@ -134,7 +205,7 @@ export default function RecruiterDashboard() {
                 {searchTerm ? `No candidates matching "${searchTerm}"` : "There are no candidates in the system yet."}
               </p>
             </div>
-          )}
+          )} */}
 
           {!loading && !error && filteredCandidates.length > 0 && (
             <div className="bg-white shadow-sm rounded-lg overflow-hidden">
@@ -254,13 +325,48 @@ export default function RecruiterDashboard() {
                   </tbody>
                 </table>
               </div>
+
+              {/* Pagination controls */}
+              {totalPages > 1 && (
+                <div className="flex items-center justify-between px-6 py-3 bg-gray-50">
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
+                    disabled={currentPage === 1}
+                  >
+                    <ArrowLeftIcon className="h-4 w-4 mr-2" />
+                    Previous
+                  </Button>
+                  <span className="text-sm text-gray-700">
+                    Page {currentPage} of {totalPages}
+                  </span>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
+                    disabled={currentPage === totalPages}
+                  >
+                    Next
+                    <ArrowRightIcon className="h-4 w-4 ml-2" />
+                  </Button>
+                </div>
+              )}
             </div>
           )}
         </div>
       </div>
 
       {selectedCandidate && (
-        <CandidateViewDialog open={viewDialogOpen} onOpenChange={setViewDialogOpen} candidate={selectedCandidate} />
+        <>
+          <CandidateViewDialog open={viewDialogOpen} onOpenChange={setViewDialogOpen} candidate={selectedCandidate} />
+          <CandidateEditDialog
+            open={editDialogOpen}
+            onOpenChange={setEditDialogOpen}
+            candidate={selectedCandidate}
+            onSave={handleSaveCandidate}
+          />
+        </>
       )}
     </>
   )

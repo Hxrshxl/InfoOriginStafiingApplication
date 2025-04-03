@@ -158,7 +158,7 @@ export default function RecruiterDashboard() {
             <h1 className="text-3xl font-bold text-gray-900">All Candidates</h1>
             <div className="flex items-center w-full md:w-auto space-x-4">
               <div className="relative w-full md:w-64">
-                <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-gray-500" />
+                <Search className="absolute left-2.5 top-2.5 size-4 text-muted-foreground" />
                 <Input
                   type="search"
                   placeholder="Search candidates..."
@@ -250,15 +250,15 @@ export default function RecruiterDashboard() {
                       <tr key={candidate._id} className="hover:bg-gray-50">
                         <td className="px-6 py-4 whitespace-nowrap">
                           <div className="flex items-center">
-                            <div className="flex-shrink-0 h-10 w-10">
+                            <div className="flex-shrink-0">
                               {candidate.profile?.profile_picture ? (
                                 <img
-                                  className="h-10 w-10 rounded-full object-cover"
+                                  className="size-10 rounded-full object-cover"
                                   src={candidate.profile.profile_picture || "/placeholder.svg"}
                                   alt={candidate.fullName}
                                 />
                               ) : (
-                                <div className="h-10 w-10 rounded-full bg-gray-200 flex items-center justify-center text-gray-500">
+                                <div className="size-10 rounded-full bg-muted flex items-center justify-center text-muted-foreground">
                                   {candidate.fullName.charAt(0).toUpperCase()}
                                 </div>
                               )}
@@ -328,17 +328,17 @@ export default function RecruiterDashboard() {
 
               {/* Pagination controls */}
               {totalPages > 1 && (
-                <div className="flex items-center justify-between px-6 py-3 bg-gray-50">
+                <div className="flex items-center justify-between p-3 bg-muted/50">
                   <Button
                     variant="outline"
                     size="sm"
                     onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
                     disabled={currentPage === 1}
                   >
-                    <ArrowLeftIcon className="h-4 w-4 mr-2" />
+                    <ArrowLeftIcon className="size-4 mr-2" />
                     Previous
                   </Button>
-                  <span className="text-sm text-gray-700">
+                  <span className="text-sm text-muted-foreground">
                     Page {currentPage} of {totalPages}
                   </span>
                   <Button
@@ -348,7 +348,7 @@ export default function RecruiterDashboard() {
                     disabled={currentPage === totalPages}
                   >
                     Next
-                    <ArrowRightIcon className="h-4 w-4 ml-2" />
+                    <ArrowRightIcon className="size-4 ml-2" />
                   </Button>
                 </div>
               )}

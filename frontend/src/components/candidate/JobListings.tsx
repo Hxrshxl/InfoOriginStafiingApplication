@@ -4,6 +4,8 @@ import { useState, useEffect } from "react"
 import { BriefcaseIcon, MapPinIcon, BanknoteIcon as BanknotesIcon } from "lucide-react"
 import toast from "react-hot-toast"
 import { CandidateTabBar } from "./CandidateTabBar"
+import { Button } from "@/components/ui/button"
+import { Card, CardContent } from "@/components/ui/card"
 
 interface Job {
   _id: string
@@ -27,7 +29,7 @@ function JobListings() {
   const fetchJobs = async (page: number) => {
     try {
       setLoading(true)
-      setError(null) 
+      setError(null)
 
       const response = await fetch(`http://localhost:3000/api/v1/job/get`, {
         method: "GET",
@@ -86,39 +88,33 @@ function JobListings() {
           <div className="max-w-7xl mx-auto">
             <div className="flex items-center justify-between mb-8">
               <h1 className="text-3xl font-bold text-gray-900">Job Listings</h1>
-              <div className="flex items-center space-x-4">
-                <span className="text-sm text-gray-500">
+              <div className="flex items-center gap-4">
+                <span className="text-sm text-muted-foreground">
                   Page {currentPage} of {totalPages}
                 </span>
-                <div className="flex space-x-2">
-                  <button
-                    onClick={goToPrevPage}
-                    disabled={currentPage === 1}
-                    className="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
-                  >
+                <div className="flex gap-2">
+                  <Button variant="outline" size="sm" onClick={goToPrevPage} disabled={currentPage === 1}>
                     Previous
-                  </button>
-                  <button
-                    onClick={goToNextPage}
-                    disabled={currentPage === totalPages}
-                    className="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
-                  >
+                  </Button>
+                  <Button variant="outline" size="sm" onClick={goToNextPage} disabled={currentPage === totalPages}>
                     Next
-                  </button>
+                  </Button>
                 </div>
               </div>
             </div>
 
             {loading && (
               <div className="flex justify-center items-center h-64">
-                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-gray-900"></div>
+                <div className="animate-spin size-8 rounded-full border-2 border-primary border-t-transparent"></div>
               </div>
             )}
 
             {error && (
-              <div className="bg-red-50 border border-red-200 rounded-md p-4 mb-4">
-                <p className="text-red-700">{error}</p>
-              </div>
+              <Card className="mb-4 border-destructive/50 bg-destructive/5">
+                <CardContent className="pt-6">
+                  <p className="text-destructive">{error}</p>
+                </CardContent>
+              </Card>
             )}
 
             {!loading && !error && jobs.length === 0 && (
@@ -202,9 +198,9 @@ function JobListings() {
                           </div>
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                          <button className="inline-flex items-center px-3 py-1.5 border border-transparent text-xs font-medium rounded-full shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                          <Button size="sm" className="rounded-full">
                             Apply Now
-                          </button>
+                          </Button>
                         </td>
                       </tr>
                     ))}

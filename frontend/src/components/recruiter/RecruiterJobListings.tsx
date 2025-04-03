@@ -154,43 +154,29 @@ function RecruiterJobListings() {
       <RecuiterTabbar />
       <div className="min-h-screen bg-gray-50 py-8 px-4 sm:px-6 lg:px-8">
         <div className="max-w-7xl mx-auto">
-          <div className="flex items-center justify-between mb-8">
-            <h1 className="text-3xl font-bold text-gray-900">Manage Job Listings</h1>
-            <div className="flex items-center space-x-4">
-              <Button onClick={() => navigate("/recruiter/job/create")} className="bg-indigo-600 hover:bg-indigo-700">
-                Create New Job
-              </Button>
-              <span className="text-sm text-gray-500">
+          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-8">
+            <h1 className="text-3xl font-bold">Manage Job Listings</h1>
+            <div className="flex flex-wrap items-center gap-4">
+              <Button onClick={() => navigate("/recruiter/job/create")}>Create New Job</Button>
+              <span className="text-sm text-muted-foreground">
                 Page {currentPage} of {totalPages}
               </span>
-              <div className="flex space-x-2">
-                <Button
-                  variant="outline"
-                  onClick={goToPrevPage}
-                  disabled={currentPage === 1}
-                  className="flex items-center gap-1"
-                >
-                  <ArrowLeftIcon className="h-4 w-4" />
+              <div className="flex gap-2">
+                <Button variant="outline" onClick={goToPrevPage} disabled={currentPage === 1} size="sm">
+                  <ArrowLeftIcon className="size-4 mr-1" />
                   Previous
                 </Button>
-                <Button
-                  variant="outline"
-                  onClick={goToNextPage}
-                  disabled={currentPage === totalPages}
-                  className="flex items-center gap-1"
-                >
+                <Button variant="outline" onClick={goToNextPage} disabled={currentPage === totalPages} size="sm">
                   Next
-                  <ArrowRightIcon className="h-4 w-4" />
+                  <ArrowRightIcon className="size-4 ml-1" />
                 </Button>
               </div>
             </div>
           </div>
 
-          {loading && (
-            <div className="flex justify-center items-center h-64">
-              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-gray-900"></div>
-            </div>
-          )}
+          <div className="flex justify-center items-center h-64">
+            <div className="animate-spin size-8 rounded-full border-2 border-primary border-t-transparent"></div>
+          </div>
 
           {error && (
             <Card className="mb-4 border-red-200 bg-red-50">
@@ -202,9 +188,9 @@ function RecruiterJobListings() {
 
           {!loading && !error && jobs.length === 0 && (
             <div className="text-center py-12">
-              <BriefcaseIcon className="mx-auto h-12 w-12 text-gray-400" />
-              <h3 className="mt-2 text-sm font-medium text-gray-900">No jobs found</h3>
-              <p className="mt-1 text-sm text-gray-500">
+              <BriefcaseIcon className="mx-auto size-12 text-muted-foreground" />
+              <h3 className="mt-2 text-sm font-medium">No jobs found</h3>
+              <p className="mt-1 text-sm text-muted-foreground">
                 You haven't created any job listings yet. Click "Create New Job" to get started.
               </p>
             </div>
@@ -275,7 +261,7 @@ function RecruiterJobListings() {
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap">
                         <div className="flex items-center text-sm text-gray-500">
-                          <MapPinIcon className="flex-shrink-0 mr-1.5 h-4 w-4 text-gray-400" />
+                          <MapPinIcon className="flex-shrink-0 mr-1.5 size-4 text-muted-foreground" />
                           {job.location}
                         </div>
                       </td>

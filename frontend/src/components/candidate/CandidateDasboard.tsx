@@ -7,10 +7,7 @@ import { CandidateTabBar } from "./CandidateTabBar"
 import { Button } from "@/components/ui/button"
 import { ProfileEditDialog } from "./profile-edit-dialog"
 // import { ProfileEditDialog } from "./profile-edit-dialog"
-import { Card, CardDescription } from "@/components/ui/card"
-import { CardContent } from "@/components/ui/card"
-import { CardHeader } from "@/components/ui/card"
-import { CardTitle } from "@/components/ui/card"
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { User, Code, GraduationCap, Briefcase, FileText, Link, LayoutDashboard, Linkedin, Github } from "lucide-react"
 
 // full user profile schema
@@ -227,7 +224,7 @@ const CandidateDashboard = () => {
           portfolio: formData.portfolio,
           linkedin_profile: formData.linkedin_profile,
           github_profile: formData.github_profile,
-          profile_picture: formData.profile_picture, 
+          profile_picture: formData.profile_picture,
         },
       }
 
@@ -252,7 +249,7 @@ const CandidateDashboard = () => {
 
       if (data.success) {
         setCandidate(data.user)
-        
+
         if (data.user.profile?.profile_picture) {
           setFormData((prev) => ({
             ...prev,
@@ -289,11 +286,11 @@ const CandidateDashboard = () => {
                     <CardTitle className="text-2xl font-bold">{candidate.fullName || "Candidate"}</CardTitle>
                     <CardDescription className="text-lg">{candidate.role || "Role not specified"}</CardDescription>
                   </div>
-                  <div className="relative ">
+                  <div className="relative">
                     <img
                       src={candidate.profile?.profile_picture || "/placeholder.svg?height=96&width=96"}
                       alt={candidate.fullName ? `${candidate.fullName}'s profile` : "Profile Photo"}
-                      className="w-24 h-24 rounded-full object-cover border-4 border-background shadow-md ml-9"
+                      className="size-24 rounded-full object-cover border-4 border-background shadow-md"
                     />
                   </div>
                 </div>
@@ -301,7 +298,7 @@ const CandidateDashboard = () => {
               <CardContent className="pt-6 pb-2">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   {/* Personal Information */}
-                  <Card className="border shadow-sm">
+                  <Card>
                     <CardHeader className="pb-2">
                       <CardTitle className="text-lg flex items-center gap-2">
                         <User className="w-4 h-4" />
@@ -309,21 +306,21 @@ const CandidateDashboard = () => {
                       </CardTitle>
                     </CardHeader>
                     <CardContent className="text-sm space-y-2">
-                      <div className="grid grid-cols-3">
+                      <div className="grid-cols-3 grid">
                         <span className="text-muted-foreground">Email:</span>
                         <span className="col-span-2 font-medium">{candidate.email || "Not provided"}</span>
                       </div>
-                      <div className="grid grid-cols-3">
+                      <div className="grid-cols-3 grid">
                         <span className="text-muted-foreground">Phone:</span>
                         <span className="col-span-2 font-medium">{candidate.phoneNumber || "Not provided"}</span>
                       </div>
-                      <div className="grid grid-cols-3">
+                      <div className="grid-cols-3 grid">
                         <span className="text-muted-foreground">Date of Birth:</span>
                         <span className="col-span-2 font-medium">
                           {candidate.profile?.date_of_birth || "Not provided"}
                         </span>
                       </div>
-                      <div className="grid grid-cols-3">
+                      <div className="grid-cols-3 grid">
                         <span className="text-muted-foreground">Address:</span>
                         <span className="col-span-2 font-medium">
                           {candidate.profile?.address
@@ -335,7 +332,7 @@ const CandidateDashboard = () => {
                   </Card>
 
                   {/* Skills */}
-                  <Card className="border shadow-sm">
+                  <Card>
                     <CardHeader className="pb-2">
                       <CardTitle className="text-lg flex items-center gap-2">
                         <Code className="w-4 h-4" />
@@ -343,13 +340,13 @@ const CandidateDashboard = () => {
                       </CardTitle>
                     </CardHeader>
                     <CardContent className="text-sm space-y-2">
-                      <div className="grid grid-cols-3">
+                      <div className="grid-cols-3 grid">
                         <span className="text-muted-foreground">Technical:</span>
                         <div className="col-span-2">
                           {candidate.profile?.technical_skills?.length ? (
                             <div className="flex flex-wrap gap-1">
                               {candidate.profile.technical_skills.map((skill, index) => (
-                                <span key={index} className="px-2 py-1 bg-primary/10 text-primary rounded-full text-xs">
+                                <span key={index} className="px-2 py-1 rounded-full text-xs bg-primary/10 text-primary">
                                   {skill}
                                 </span>
                               ))}
@@ -359,7 +356,7 @@ const CandidateDashboard = () => {
                           )}
                         </div>
                       </div>
-                      <div className="grid grid-cols-3">
+                      <div className="grid-cols-3 grid">
                         <span className="text-muted-foreground">Soft Skills:</span>
                         <div className="col-span-2">
                           {candidate.profile?.soft_skills?.length ? (
@@ -367,7 +364,7 @@ const CandidateDashboard = () => {
                               {candidate.profile.soft_skills.map((skill, index) => (
                                 <span
                                   key={index}
-                                  className="px-2 py-1 bg-secondary/10 text-secondary rounded-full text-xs"
+                                  className="px-2 py-1 rounded-full text-xs bg-secondary/10 text-secondary"
                                 >
                                   {skill}
                                 </span>
@@ -378,13 +375,13 @@ const CandidateDashboard = () => {
                           )}
                         </div>
                       </div>
-                      <div className="grid grid-cols-3">
+                      <div className="grid-cols-3 grid">
                         <span className="text-muted-foreground">Languages:</span>
                         <div className="col-span-2">
                           {candidate.profile?.languages_known?.length ? (
                             <div className="flex flex-wrap gap-1">
                               {candidate.profile.languages_known.map((lang, index) => (
-                                <span key={index} className="px-2 py-1 bg-accent/10 text-accent rounded-full text-xs">
+                                <span key={index} className="px-2 py-1 rounded-full text-xs bg-accent/10 text-accent">
                                   {lang}
                                 </span>
                               ))}
@@ -398,7 +395,7 @@ const CandidateDashboard = () => {
                   </Card>
 
                   {/* Education */}
-                  <Card className="border shadow-sm">
+                  <Card>
                     <CardHeader className="pb-2">
                       <CardTitle className="text-lg flex items-center gap-2">
                         <GraduationCap className="w-4 h-4" />
@@ -434,7 +431,7 @@ const CandidateDashboard = () => {
                   </Card>
 
                   {/* Experience */}
-                  <Card className="border shadow-sm">
+                  <Card>
                     <CardHeader className="pb-2">
                       <CardTitle className="text-lg flex items-center gap-2">
                         <Briefcase className="w-4 h-4" />
@@ -461,7 +458,7 @@ const CandidateDashboard = () => {
             </Card>
 
             {/* Bio Section */}
-            <Card className="border shadow-sm">
+            <Card>
               <CardHeader className="pb-2">
                 <CardTitle className="text-lg flex items-center gap-2">
                   <FileText className="w-4 h-4" />
@@ -478,7 +475,7 @@ const CandidateDashboard = () => {
             </Card>
 
             {/* Links Section */}
-            <Card className="border shadow-sm">
+            <Card>
               <CardHeader className="pb-2">
                 <CardTitle className="text-lg flex items-center gap-2">
                   <Link className="w-4 h-4" />
@@ -487,6 +484,7 @@ const CandidateDashboard = () => {
               </CardHeader>
               <CardContent>
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                  {/* Portfolio Link */}
                   <a
                     href={candidate.profile?.portfolio || "#"}
                     target="_blank"
@@ -502,6 +500,7 @@ const CandidateDashboard = () => {
                     </div>
                   </a>
 
+                  {/* LinkedIn Link */}
                   <a
                     href={candidate.profile?.linkedin_profile || "#"}
                     target="_blank"
@@ -517,6 +516,7 @@ const CandidateDashboard = () => {
                     </div>
                   </a>
 
+                  {/* GitHub Link */}
                   <a
                     href={candidate.profile?.github_profile || "#"}
                     target="_blank"

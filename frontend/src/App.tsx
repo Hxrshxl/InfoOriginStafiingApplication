@@ -1,71 +1,55 @@
-import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom"
-import { AuthProvider } from "./context/AuthContext"
-import ProtectedRoute from "./components/auth/ProtectedRoute"
-import { Signup } from "./components/auth/Signup"
-import { Toaster } from "@/components/ui/sonner"
-import { ThemeProvider } from "./components/theme-provider"
-import JobListings from "./components/candidate/JobListings"
-import RecruiterDashboard from "./components/recruiter/RecruiterDashboard"
-import { Login } from "./components/auth/Login"
-import AuthPage from "./components/auth/AuthPage"
-import CandidateDashboard from "./components/candidate/CandidateDasboard"
-import RecruiterJobListings from "./components/recruiter/RecruiterJobListings"
+"use client"
 
-const App = () => {
+import { Routes, Route, Navigate } from "react-router-dom"
+import { useAuth } from "./auth/AuthContext"
+import Login from "./auth/Login"
+import Register from "./auth/Register"
+import CandidateDashboard from "./Candidate/CandidateDashboard"
+import RecruiterDashboard from "./Recruiter/RecruiterDashboard"
+import LandingPage from "./auth/LandingPage"
+import "./App.css"
+
+function App() {
+  const { user } = useAuth()
+
   return (
-    <ThemeProvider defaultTheme="light" storageKey="job-portal-theme">
-      <Router>
-        <AuthProvider>
-          <Routes>
-            {/* Public routes */}
-            <Route path="/signup" element={<Signup />} />
-            <Route path="/login" element={<AuthPage />} />
-            <Route path="/" element={<AuthPage />} />
+    <div className="min-h-screen bg-background">
+      <Routes>
+        <Route path="/" element={<LandingPage />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<Register />} />
 
-            {/* Protected candidate routes */}
-            <Route
-              path="/candidate-dashboard"
-              element={
-                <ProtectedRoute allowedRoles={["candidate"]}>
-                  <CandidateDashboard />
-                </ProtectedRoute>
-              }
-            />
+        {/* Protected Routes */}
+        <Route
+          path="/candidate/dashboard"
+          element={user && user.role === "candidate" ? <CandidateDashboard /> : <Navigate to="/login" replace />}
+        />
 
-            <Route
-              path="/job-listings"
-              element={
-                <ProtectedRoute allowedRoles={["candidate"]}>
-                  <JobListings />
-                </ProtectedRoute>
-              }
-            />
+        <Route
+          path="/recruiter/dashboard"
+          element={user && user.role === "recruiter" ? <RecruiterDashboard /> : <Navigate to="/login" replace />}
+        />
 
-            {/* Protected recruiter routes */}
-            <Route
-              path="/recruiter-dashboard"
-              element={
-                <ProtectedRoute allowedRoles={["recruiter"]}>
-                  <RecruiterDashboard />
-                </ProtectedRoute>
-              }
-            />
+        {/* Redirect to appropriate dashboard if logged in */}
+        <Route
+          path="/dashboard"
+          element={
+            user ? (
+              user.role === "candidate" ? (
+                <Navigate to="/candidate/dashboard" replace />
+              ) : (
+                <Navigate to="/recruiter/dashboard" replace />
+              )
+            ) : (
+              <Navigate to="/login" replace />
+            )
+          }
+        />
 
-<Route
-              path="/recruiter-job-listings"
-              element={
-                <ProtectedRoute allowedRoles={["recruiter"]}>
-                  <RecruiterJobListings />
-                </ProtectedRoute>
-              }
-            />
-            {/* Fallback route */}
-            <Route path="*" element={<Navigate to="/" replace />} />
-          </Routes>
-          <Toaster />
-        </AuthProvider>
-      </Router>
-    </ThemeProvider>
+        {/* Fallback route */}
+        <Route path="*" element={<Navigate to="/" replace />} />
+      </Routes>
+    </div>
   )
 }
 

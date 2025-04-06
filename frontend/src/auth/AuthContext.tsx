@@ -4,13 +4,24 @@ import { createContext, useContext, useState, useEffect, type ReactNode } from "
 import axios from "axios"
 import { toast, Toaster } from "sonner"
 
-// Define types
+// ========== Types ==========
 interface User {
   _id: string
   fullName: string
   email: string
   username: string
   phoneNumber: number
+  city: string
+  skills: string[]
+  role: "candidate" | "recruiter"
+}
+
+interface RegisterData {
+  fullName: string
+  email: string
+  username: string
+  phoneNumber: number
+  password: string
   city: string
   skills: string[]
   role: "candidate" | "recruiter"
@@ -26,161 +37,104 @@ interface AuthContextType {
   clearError: () => void
 }
 
-interface RegisterData {
-  fullName: string
-  email: string
-  username: string
-  phoneNumber: number
-  password: string
-  city: string
-  skills: string[]
-  role: "candidate" | "recruiter"
-}
-
-// Create context
+// ========== Create Context ==========
 const AuthContext = createContext<AuthContextType | undefined>(undefined)
-
-// API base URL
 const API_URL = "http://localhost:3000/api/v1/user"
 
-// Provider component
+// ========== Provider ==========
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [user, setUser] = useState<User | null>(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
 
-  // Check if user is already logged in
+  // Check if user is already logged in (on page load)
   useEffect(() => {
     const checkAuthStatus = async () => {
       try {
-        const response = await axios.get(`${API_URL}/getprofile`, {
+        const res = await axios.get(`${API_URL}/getprofile`, {
           withCredentials: true,
         })
-
-        if (response.data.success) {
-          setUser(response.data.user)
-        }
-      } catch (err) {
-        // User is not logged in, that's okay
+        if (res.data.success) setUser(res.data.user)
+      } catch {
         console.log("User not authenticated")
       } finally {
         setLoading(false)
       }
     }
-
     checkAuthStatus()
   }, [])
 
-  // Login function
+  // ========== Login ==========
   const login = async (username: string, password: string) => {
     try {
       setLoading(true)
       setError(null)
-
-      const response = await axios.post(`${API_URL}/login`, { username, password }, { withCredentials: true })
-
-      if (response.data.success) {
-        setUser(response.data.user)
-        toast.success("Login successful", {
-          description: response.data.message,
-        })
+      const res = await axios.post(`${API_URL}/login`, { username, password }, { withCredentials: true })
+      if (res.data.success) {
+        setUser(res.data.user)
+        toast.success("Login successful", { description: res.data.message })
       } else {
-        setError(response.data.message || "Login failed")
-        toast.error("Login failed", {
-          description: response.data.message || "An error occurred during login",
-        })
+        throw new Error(res.data.message || "Login failed")
       }
     } catch (err: any) {
-      const errorMessage = err.response?.data?.message || "An error occurred during login"
-      setError(errorMessage)
-      toast.error("Login failed", {
-        description: errorMessage,
-      })
+      const msg = err.response?.data?.message || "An error occurred during login"
+      setError(msg)
+      toast.error("Login failed", { description: msg })
     } finally {
       setLoading(false)
     }
   }
 
-  // Register function
+  // ========== Register ==========
   const register = async (userData: RegisterData) => {
     try {
       setLoading(true)
       setError(null)
-
-      const response = await axios.post(`${API_URL}/register`, userData, { withCredentials: true })
-
-      if (response.data.success) {
-        toast.success("Registration successful", {
-          description: "Your account has been created successfully.",
-        })
+      const res = await axios.post(`${API_URL}/register`, userData, { withCredentials: true })
+      if (res.data.success) {
+        toast.success("Registration successful", { description: "Account created successfully." })
       } else {
-        setError(response.data.message || "Registration failed")
-        toast.error("Registration failed", {
-          description: response.data.message || "An error occurred during registration",
-        })
+        throw new Error(res.data.message || "Registration failed")
       }
     } catch (err: any) {
-      const errorMessage = err.response?.data?.message || "An error occurred during registration"
-      setError(errorMessage)
-      toast.error("Registration failed", {
-        description: errorMessage,
-      })
+      const msg = err.response?.data?.message || "An error occurred during registration"
+      setError(msg)
+      toast.error("Registration failed", { description: msg })
     } finally {
       setLoading(false)
     }
   }
 
-  // Logout function
+  // ========== Logout ==========
   const logout = async () => {
     try {
       setLoading(true)
-
-      await axios.get(`${API_URL}/logout`, {
-        withCredentials: true,
-      })
-
+      await axios.get(`${API_URL}/logout`, { withCredentials: true })
       setUser(null)
-      toast.success("Logout successful", {
-        description: "You have been logged out successfully.",
-      })
+      toast.success("Logout successful", { description: "You have been logged out." })
     } catch (err: any) {
-      const errorMessage = err.response?.data?.message || "An error occurred during logout"
-      setError(errorMessage)
-      toast.error("Logout failed", {
-        description: errorMessage,
-      })
+      const msg = err.response?.data?.message || "An error occurred during logout"
+      setError(msg)
+      toast.error("Logout failed", { description: msg })
     } finally {
       setLoading(false)
     }
   }
 
-  // Clear error
   const clearError = () => setError(null)
 
   return (
-    <AuthContext.Provider
-      value={{
-        user,
-        loading,
-        error,
-        login,
-        register,
-        logout,
-        clearError,
-      }}
-    >
+    <AuthContext.Provider value={{ user, loading, error, login, register, logout, clearError }}>
       {children}
       <Toaster />
     </AuthContext.Provider>
   )
 }
 
-// Custom hook to use the auth context
+// ========== Hook ==========
 export const useAuth = () => {
   const context = useContext(AuthContext)
-  if (context === undefined) {
-    throw new Error("useAuth must be used within an AuthProvider")
-  }
+  if (!context) throw new Error("useAuth must be used within an AuthProvider")
   return context
 }
 

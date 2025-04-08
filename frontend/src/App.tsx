@@ -1,6 +1,10 @@
+// 
+
 "use client"
 
-import { Routes, Route, Navigate } from "react-router-dom"
+import { useEffect } from "react"
+
+import { Routes, Route, Navigate, useSearchParams, useNavigate } from "react-router-dom"
 import { useAuth } from "./auth/AuthContext"
 import Login from "./auth/Login"
 import Register from "./auth/Register"
@@ -17,7 +21,7 @@ function App() {
       <Routes>
         <Route path="/" element={<LandingPage />} />
         <Route path="/login" element={<Login />} />
-        <Route path="/register" element={<Register />} />
+        <Route path="/register" element={<RegisterGuard />} />
 
         {/* Protected Routes */}
         <Route
@@ -53,5 +57,21 @@ function App() {
   )
 }
 
-export default App
+// Guard component to prevent recruiter registration
+function RegisterGuard() {
+  const [searchParams] = useSearchParams()
+  const role = searchParams.get("role")
+  const navigate = useNavigate()
 
+  useEffect(() => {
+    // If role is recruiter, redirect to login
+    if (role === "recruiter") {
+      navigate("/login?role=recruiter", { replace: true })
+    }
+  }, [role, navigate])
+
+  // Only render Register component if role is not recruiter
+  return role === "recruiter" ? null : <Register />
+}
+
+export default App

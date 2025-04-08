@@ -5,12 +5,14 @@ import axios from "axios"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
-import { Eye, Pencil, Trash2, Plus } from "lucide-react"
+import { Eye, Pencil, Trash2, Plus, Users } from "lucide-react"
 import { toast } from "sonner"
 import AddJobDialog from "./add-job-dialog"
 import ViewJobDialog from "./view-job-dialog"
 import EditJobDialog from "./edit-job-dialog"
 import DeleteJobDialog from "./delete-job-dialog"
+import ViewApplicantsDialog from "./view-applicants-dialog"
+import { Badge } from "@/components/ui/badge"
 
 interface Job {
   _id: string
@@ -23,7 +25,7 @@ interface Job {
   experienceLevel: number
   position: number
   companyName: string
-  applicationCount?: number
+  applications: string[]
 }
 
 export default function JobListingsTab() {
@@ -36,6 +38,8 @@ export default function JobListingsTab() {
   const [viewDialogOpen, setViewDialogOpen] = useState(false)
   const [editDialogOpen, setEditDialogOpen] = useState(false)
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false)
+  const [applicantsDialogOpen, setApplicantsDialogOpen] = useState(false)
+  const [selectedJobId, setSelectedJobId] = useState<string>("")
 
   useEffect(() => {
     fetchJobs()
@@ -72,6 +76,11 @@ export default function JobListingsTab() {
   const handleDeleteJob = (job: Job) => {
     setSelectedJob(job)
     setDeleteDialogOpen(true)
+  }
+
+  const handleViewApplicants = (jobId: string) => {
+    setSelectedJobId(jobId)
+    setApplicantsDialogOpen(true)
   }
 
   const handleJobAdded = () => {
@@ -116,6 +125,7 @@ export default function JobListingsTab() {
                   <TableHead>Location</TableHead>
                   <TableHead>Salary</TableHead>
                   <TableHead>Type</TableHead>
+                  <TableHead>Applicants</TableHead>
                   <TableHead className="text-right">Actions</TableHead>
                 </TableRow>
               </TableHeader>
@@ -127,8 +137,23 @@ export default function JobListingsTab() {
                     <TableCell>{job.location}</TableCell>
                     <TableCell>${job.salary.toLocaleString()}</TableCell>
                     <TableCell>{job.jobType}</TableCell>
+                    <TableCell>
+                      <Badge variant="outline" className="flex items-center gap-1">
+                        <Users className="h-3 w-3" />
+                        {job.applications?.length || 0}
+                      </Badge>
+                    </TableCell>
                     <TableCell className="text-right">
                       <div className="flex justify-end gap-2">
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={() => handleViewApplicants(job._id)}
+                          className="flex items-center gap-1"
+                        >
+                          <Users className="h-4 w-4 mr-1" />
+                          View Applicants
+                        </Button>
                         <Button variant="outline" size="icon" onClick={() => handleViewJob(job)} title="View job">
                           <Eye className="h-4 w-4" />
                         </Button>
@@ -176,7 +201,9 @@ export default function JobListingsTab() {
           />
         </>
       )}
+
+      {/* View Applicants Dialog */}
+      <ViewApplicantsDialog open={applicantsDialogOpen} onOpenChange={setApplicantsDialogOpen} jobId={selectedJobId} />
     </Card>
   )
 }
-

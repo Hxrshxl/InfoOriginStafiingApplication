@@ -91,12 +91,15 @@ const Login = () => {
               {loading ? "Logging in..." : "Login"}
             </Button>
 
-            <div className="text-center text-sm mt-4">
-              Don&apos;t have an account?{" "}
-              <Link to={`/register?role=${role}`} className="text-blue-600 hover:underline">
-                Sign up
-              </Link>
-            </div>
+            {/* Only show signup option for candidates */}
+            {role === "candidate" ? (
+              <div className="text-center text-sm mt-4">
+                Don&apos;t have an account?{" "}
+                <Link to={`/register?role=${role}`} className="text-blue-600 hover:underline">
+                  Sign up
+                </Link>
+              </div>
+            ) : null}
 
             <div className="pt-2">
               <Button variant="outline" type="button" className="w-full" onClick={handleBackToRoleSelection}>

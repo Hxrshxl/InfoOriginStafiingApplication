@@ -37,25 +37,27 @@ const CandidateDashboard = () => {
       {/* Main Content */}
       <div className="container mx-auto px-4 py-8">
         {/* Horizontal Tabs */}
-        <div className="flex justify-center mb-6">
-          <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full max-w-md">
-            <div className="flex justify-center">
-              <TabsList className="grid grid-cols-2">
-                <TabsTrigger value="profile">
-                  <User className="h-4 w-4 mr-2" />
-                  Profile
-                </TabsTrigger>
-                <TabsTrigger value="jobs">
-                  <Briefcase className="h-4 w-4 mr-2" />
-                  Jobs
-                </TabsTrigger>
-              </TabsList>
-            </div>
-          </Tabs>
-        </div>
+        <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
+          <TabsList className="w-full grid grid-cols-2 mb-8">
+            <TabsTrigger value="profile">
+              <User className="h-4 w-4 mr-2" />
+              Profile
+            </TabsTrigger>
+            <TabsTrigger value="jobs">
+              <Briefcase className="h-4 w-4 mr-2" />
+              Jobs
+            </TabsTrigger>
+          </TabsList>
+
+          <TabsContent value="profile">
+          </TabsContent>
+          <TabsContent value="jobs">
+          </TabsContent>
+        </Tabs>
+
 
         {/* Tab Content */}
-        <div className="mt-6">
+        <div className="mt-6 ">
           {activeTab === "profile" && (
             <Card>
               <CardHeader>
@@ -104,33 +106,31 @@ const CandidateDashboard = () => {
               </CardContent>
             </Card>
           )}
-
-          {activeTab === "jobs" && (
-            <Card>
-              <CardHeader>
-                <CardTitle>Jobs</CardTitle>
-                <CardDescription>Browse available jobs and track your applications</CardDescription>
-              </CardHeader>
-              <CardContent>
-                <Tabs defaultValue="available" value={jobsTab} onValueChange={setJobsTab} className="w-full">
-                  <div className="flex justify-center mb-6">
-                    <TabsList className="grid grid-cols-2">
+            {activeTab === "jobs" && (
+              <Card>
+                <CardHeader>
+                  <CardTitle>Jobs</CardTitle>
+                  <CardDescription>Browse available jobs and track your applications</CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <Tabs defaultValue="available" value={jobsTab} onValueChange={setJobsTab} className="w-full">
+                    <TabsList className="w-full grid grid-cols-2 mb-8">
                       <TabsTrigger value="available">Available Jobs</TabsTrigger>
                       <TabsTrigger value="applied">Applied Jobs</TabsTrigger>
                     </TabsList>
-                  </div>
 
-                  <TabsContent value="available">
-                    <JobsListings />
-                  </TabsContent>
+                    <TabsContent value="available">
+                      <JobsListings />
+                    </TabsContent>
 
-                  <TabsContent value="applied">
-                    <AppliedJobs />
-                  </TabsContent>
-                </Tabs>
-              </CardContent>
-            </Card>
-          )}
+                    <TabsContent value="applied">
+                      <AppliedJobs />
+                    </TabsContent>
+                  </Tabs>
+                </CardContent>
+              </Card>
+            )}
+
         </div>
       </div>
     </div>

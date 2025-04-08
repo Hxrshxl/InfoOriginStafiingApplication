@@ -32,10 +32,15 @@ const Login = () => {
     if (!username || !password) return
 
     try {
-      await login(username, password)
-      navigate("/dashboard")
+      // Wait for login to complete successfully before navigating
+      const success = await login(username, password, role)
+      // Only navigate if login was successful
+      if (success) {
+        navigate("/dashboard")
+      }
     } catch (error) {
       console.error("Login failed:", error)
+      // Don't navigate on error
     }
   }
 
@@ -106,4 +111,3 @@ const Login = () => {
 }
 
 export default Login
-

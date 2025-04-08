@@ -31,7 +31,7 @@ interface AuthContextType {
   user: User | null
   loading: boolean
   error: string | null
-  login: (username: string, password: string) => Promise<void>
+  login: (username: string, password: string, role: "candidate" | "recruiter") => Promise<boolean>
   register: (userData: RegisterData) => Promise<void>
   logout: () => Promise<void>
   clearError: () => void
@@ -65,21 +65,28 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   }, [])
 
   // ========== Login ==========
-  const login = async (username: string, password: string) => {
+  const login = async (username: string, password: string, role: "candidate" | "recruiter"): Promise<boolean> => {
     try {
       setLoading(true)
       setError(null)
       const res = await axios.post(`${API_URL}/login`, { username, password }, { withCredentials: true })
       if (res.data.success) {
+        // Check if the user's role matches the selected role
+        if (res.data.user.role !== role) {
+          setUser(null) // Clear any user data
+          throw new Error(`Invalid credentials for ${role} login. Please use the correct account type.`)
+        }
         setUser(res.data.user)
         toast.success("Login successful", { description: res.data.message })
+        return true // Return true to indicate successful login
       } else {
         throw new Error(res.data.message || "Login failed")
       }
     } catch (err: any) {
-      const msg = err.response?.data?.message || "An error occurred during login"
+      const msg = err.response?.data?.message || err.message || "An error occurred during login"
       setError(msg)
       toast.error("Login failed", { description: msg })
+      return false // Return false to indicate failed login
     } finally {
       setLoading(false)
     }
@@ -137,4 +144,3 @@ export const useAuth = () => {
   if (!context) throw new Error("useAuth must be used within an AuthProvider")
   return context
 }
-

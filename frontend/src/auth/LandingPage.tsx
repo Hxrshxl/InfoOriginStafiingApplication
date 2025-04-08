@@ -18,8 +18,7 @@ const LandingPage = () => {
     <div className="min-h-screen flex flex-col items-center justify-center bg-slate-50 p-4">
       <div className="w-full max-w-6xl grid grid-cols-1 md:grid-cols-2 gap-6">
  
-        <TiltMotion tiltFactor={20} scale={1.05} perspective={1500} transitionDuration={0.3}>
-            <Card className="w-full max-w-md bg-white shadow-xl overflow-hidden rounded-[0.75rem] min-h-[400px] min-w-[400px]">
+       
           {/* Candidate Card */}
         <Card className="border shadow-sm overflow-hidden">
           <CardHeader className="text-center pb-0">
@@ -34,13 +33,11 @@ const LandingPage = () => {
             </Button>
           </CardContent>
         </Card>
-            </Card>
-        </TiltMotion>
 
 
 
-        <TiltMotion tiltFactor={20} scale={1.05} perspective={1500} transitionDuration={0.3}>
-            <Card className="w-full max-w-md bg-white shadow-xl overflow-hidden rounded-[0.75rem] min-h-[400px] min-w-[400px]">
+
+       
           {/* Recruiter Card */}
         <Card className="border shadow-sm overflow-hidden">
           <CardHeader className="text-center pb-0">
@@ -55,9 +52,6 @@ const LandingPage = () => {
             </Button>
           </CardContent>
         </Card>
-            </Card>
-        </TiltMotion>
-        
       </div>
     </div>
   )

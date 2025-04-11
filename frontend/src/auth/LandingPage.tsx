@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader } from "@/components/ui/card"
 import coding from "@/assets/coding.svg"
 import interview from "@/assets/interview.svg"
-import { TiltMotion } from "@/components/ui/tilt-motion"
+
 
 const LandingPage = () => {
   const navigate = useNavigate()
